@@ -69,10 +69,13 @@ export default function ChatInterface({ persona }: { persona: Persona }) {
       let reply: string
 
       if (hasApiRoute) {
+        const history = messages
+          .slice(-6)
+          .map((m) => ({ role: m.role, text: m.text }))
         const res = await fetch(`/api/chat/${persona.key}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text }),
+          body: JSON.stringify({ message: text, history }),
         })
         const data = await res.json()
         reply = data.reply ?? '응? 뭔가 잘못됐는데, 다시 물어봐줘.'
